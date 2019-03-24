@@ -14,6 +14,8 @@ bool save(string fileToSave);
 void negative();
 // thresholding
 void threshold(int thr);
+// menuinit
+void menuInit();
 ////////////////////////////////////// GLOBAL VARIABLES ///////////////////
 
 fstream file;
@@ -28,14 +30,48 @@ int **pixelsTable;
 ////////////////////////////////////// MAIN ///////////////////////////////
 int main()
 {
-    string fileTitle = "body2.ascii.pgm";
+    system("clear");
+    string fileTitle;
+    cout << "Welcom in the .pgm pictures formating program." << endl;
+    cout << "enter the name of fileto work on: ";
+    cin >> fileTitle;
+    cout << endl << "---------------------------------------------------------" << endl;
     if(!load(fileTitle));
     else
     {
-        negative();
-        save("newfile.pgm");
+        char program;
+        int thr;
+        string saveName;
+        bool exit=false;
+        ///////////// MENU INIT /////////////////////////////////////////
+        while(!exit)
+        {
+            menuInit();
+            cin >> program;
 
-    
+            if(program =='1')
+            {
+                negative();
+                system("clear");
+                cout << "Enter name for save the file" << endl;
+                cin >> saveName;
+                save(saveName);
+            }
+            else if(program == '2')
+            {
+                system("clear");
+                cout << "Threshold lvl: " << endl;
+                cin >> thr;
+                threshold(thr);
+                cout << "Enter name for save the file" << endl;
+                cin >> saveName;
+                save(saveName);
+            }
+            else if(program == 'q' || program == 'Q')
+            {
+                exit = true;
+            }
+        }
     }
 
     file.close();
@@ -111,5 +147,29 @@ void negative()
 ///////////////////////////////////////////////////////////////////////////
 void threshold(int thr)
 {
-    
+    greyRange = 1;
+    if(thr < 0 && thr > greyRange)
+        cout << endl << "---!Wrong lvl!---" << endl;
+    else
+    {
+        for(int i = 0; i < height; i++)
+        {
+            for(int j = 0; j < width; j ++)
+            {
+                if(pixelsTable[i][j] >= thr)
+                    pixelsTable[i][j] = 1;
+                else pixelsTable[i][j] = 0;
+            }
+        }
+    }
+}
+//////////////////////////////////////////////////////////////////////////
+void menuInit()
+{
+    cout << endl << "---------------------------------------------------------" << endl;
+    system("clear");
+    cout << "1. Make Negative" << endl;
+    cout << "2. Threshold" << endl;
+    cout << endl << "---------------------------------------------------------" << endl;
+    cout << "Q for quit" << endl;
 }
