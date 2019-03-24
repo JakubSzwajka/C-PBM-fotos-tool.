@@ -21,6 +21,9 @@ string magicNumber;
 string fileName;
 int height = 0;
 int width = 0;
+int greyRange = 1;
+
+int **pixelsTable;
 
 ////////////////////////////////////// MAIN ///////////////////////////////
 int main()
@@ -29,12 +32,11 @@ int main()
     if(!load(fileTitle));
     else
     {
-        cout << magicNumber << endl;
-        cout << fileName << endl;
-        cout << "height: " << height << endl;
-        cout << "width: " << width << endl;
-    }
+        negative();
+        save("newfile.pgm");
+
     
+    }
 
     file.close();
     return 0;
@@ -59,11 +61,19 @@ bool load(string fileToLoad)
         // get magic number , name and dimensions
         getline(file, magicNumber);
         getline(file, fileName);
-        file >> height >> width;
-
+        file >> width >> height >> greyRange;
+        // generate table of pointers with pointers
+        pixelsTable = new int * [height];
+        for(int i = 0; i < height; i++)
+        {
+            pixelsTable[i] = new int [width];  
+            for(int j = 0; j < width; j ++)
+            {
+                // and fill them with pixel color data
+                file >> pixelsTable[i][j];
+            }
+        }
     }
-    
-
     return succes;
 }
 //////////////////////////////////////////////////////////////////////////
@@ -71,15 +81,35 @@ bool save(string fileToSave)
 {
     bool succes = true;
 
+    ofstream newFile(fileToSave);
+    newFile << magicNumber << endl;
+    newFile << fileName << endl;
+    newFile << width << " "<< height << endl;
+    newFile << greyRange << endl;
+
+    for(int i = 0; i < height; i++)
+    {
+        for(int j = 0; j < width; j ++)
+        {
+                newFile << pixelsTable[i][j] << " ";
+        }
+    }
+
     return succes;
 }
 ///////////////////////////////////////////////////////////////////////////
 void negative()
 {
-
+    for(int i = 0; i < height; i++)
+    {
+        for(int j = 0; j < width; j ++)
+        {
+            pixelsTable[i][j] = greyRange - pixelsTable[i][j];
+        }
+    }
 }
 ///////////////////////////////////////////////////////////////////////////
 void threshold(int thr)
 {
-
+    
 }
